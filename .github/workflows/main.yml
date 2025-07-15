@@ -1,32 +1,33 @@
-name: Sync Risk Labels
+name: Sync Chainabuse Risk Labels
 
 on:
   schedule:
-    - cron: "*/1 * * * *"  # 每1分钟运行
-  workflow_dispatch:       # 手动触发支持
-  push:                    # 也可以在 push 代码时触发
+    - cron: "*/1 * * * *"  # 每分钟执行一次（GitHub Actions 支持的最小间隔）
+  workflow_dispatch:       # 允许手动触发
+  push:                    # 代码 push 时触发（可选）
 
 jobs:
-  run-sync:
+  run-chainabuse-sync:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out repository
+    - name: 🧾 Checkout Repository
       uses: actions/checkout@v3
 
-    - name: Set up Python
+    - name: 🐍 Set up Python
       uses: actions/setup-python@v5
       with:
         python-version: "3.10"
 
-    - name: Install dependencies
+    - name: 📦 Install Dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run Chainabuse Sync
+    - name: 🔐 Set PYTHONPATH and Run Import Script
       env:
         CHAINABUSE_API_KEY: ${{ secrets.CHAINABUSE_API_KEY }}
         MONGO_URI: ${{ secrets.MONGO_URI }}
       run: |
+        export PYTHONPATH="${{ github.workspace }}"
         python data/chainabuse_import.py
