@@ -1,7 +1,17 @@
 ```python
-from fastapi import FastAPI
-from app.routes import router
+from pydantic import BaseModel
+from typing import List, Optional
 
-app = FastAPI(title="Address Risk Label System")
-app.include_router(router)
+class RiskLabel(BaseModel):
+    type: str
+    source: str
+    evidence_url: Optional[str] = None
+    confidence: str
+    tagged_at: str
+
+class AddressProfile(BaseModel):
+    address: str
+    chain: str
+    labels: List[RiskLabel]
+    updated_at: str
 ```
