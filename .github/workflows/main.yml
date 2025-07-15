@@ -2,9 +2,9 @@ name: Sync Chainabuse Risk Labels
 
 on:
   schedule:
-    - cron: "*/1 * * * *"  # 每分钟执行一次（GitHub Actions 支持的最小间隔）
-  workflow_dispatch:       # 允许手动触发
-  push:                    # 代码 push 时触发（可选）
+    - cron: "*/1 * * * *"  # 每分钟执行一次
+  workflow_dispatch:
+  push:
 
 jobs:
   run-chainabuse-sync:
@@ -29,5 +29,5 @@ jobs:
         CHAINABUSE_API_KEY: ${{ secrets.CHAINABUSE_API_KEY }}
         MONGO_URI: ${{ secrets.MONGO_URI }}
       run: |
-        export PYTHONPATH="${{ github.workspace }}"
+        export PYTHONPATH=.
         python data/chainabuse_import.py
